@@ -133,7 +133,7 @@ th{font-weight:600;width:130px;background:var(--bg)}
 <h2>Buying guides</h2>
 <p class="muted">Plain-language guides, written before we sell anything. First three in progress:</p>
 <div class="grid">
-<div class="card"><span class="tag wait">In progress</span><h3>5 things to check before buying a smart bidet seat</h3><p>Water pressure, power point, seat size, safety and service.</p></div>
+<div class="card"><span class="tag">New guide</span><h3><a href="#guide-bidet-seat">5 things to check before buying an electronic bidet seat</a></h3><p>Power point, water connection, toilet fit, hard water and service.</p></div>
 <div class="card"><span class="tag wait">In progress</span><h3>Smart lock vs traditional lock</h3><p>Battery, backup key, door type and installation.</p></div>
 <div class="card"><span class="tag wait">In progress</span><h3>How to stop water leaks at home</h3><p>Where leaks start and how sensors help.</p></div>
 </div></div></section>
@@ -304,6 +304,7 @@ function route(){
  var h=decodeURIComponent(location.hash.slice(1)),v=null,t="Vyomart – Discover Smarter Living";
  if(h.indexOf("product-")===0){var p=PRODUCTS.filter(function(x){return "product-"+SLUG(x.n)===h})[0];if(p){v=pView(p);t=p.n+" – Vyomart"}}
  else if(h==="compare"){v=cView();t="Compare – Vyomart"}
+ else if(h==="guide-bidet-seat"){v=gView();t="Electronic bidet seat buying guide - Vyomart"}
  else if(h==="calculator"){v=calcView();t="Calculator - Vyomart"}
  else if(POLICY[h]){v=polView(h);t=POLICY[h].t+" – Vyomart"}
  document.title=t;
@@ -352,6 +353,23 @@ function calcView(){
   res.appendChild(el("p",{},band));
  }
  calc();tot();return r[0]}
+var GUIDE={t:"5 things to check before buying an electronic bidet seat",intro:"An electronic bidet seat replaces the seat on your existing toilet and adds a warm water wash and a heated seat. It needs both power and water near the toilet, so a few checks at home save a lot of trouble later.",s:[
+["1. A safe power point near the toilet","Electric seats need a socket close to the toilet. Because the area can get wet, ask a licensed electrician for an earthed socket with proper protection, kept away from splashes. Do not use an extension cord across a wet floor."],
+["2. A water connection for the seat","The seat takes water from the cold supply line, usually through a T-valve fitted before the flush tank. Check that you can reach the angle cock, and ask a plumber to fit it. Non-electric seats use your line pressure directly, so they feel strong only if your pressure is good. Electric seats have an internal pump and give a more steady stream."],
+["3. Fit with your toilet","Electronic bidet seats are made for western-style toilets. Measure the distance between the mounting holes and the length of the bowl, and check whether yours is round or elongated. If the seller cannot confirm the fit for your model, ask for the dimensions."],
+["4. Hard water and voltage changes","Hard water can leave deposits on nozzles and heaters, and voltage swings can stress electronics. Ask the seller how the nozzle is cleaned, whether a water filter is recommended, and what the product is rated for."],
+["5. Warranty and service in your city","Get the warranty terms in writing, and ask who repairs the product, how long spare parts take, and whether the nozzle and heater are covered. Ask for safety certification where it applies to the product. A good price means little if nobody can fix it."]],
+end:"Not sure an electric seat is right for you? A non-electric seat needs no socket, and a simple health faucet works for many bathrooms. Choose based on your power and water points, your budget and who will use it.",
+note:"This is general guidance, not electrical or plumbing advice. Ask a licensed electrician and plumber before installation."};
+function gView(){
+ var r=shell(),w=r[1];w.appendChild(el("a",{href:"#guides"},"\u2190 Buying guides"));
+ w.appendChild(el("h1",{"class":"t1"},GUIDE.t));
+ var i=el("p",{"class":"muted"},GUIDE.intro);i.style.fontSize="1.1rem";w.appendChild(i);
+ GUIDE.s.forEach(function(x){var h=el("h3",{},x[0]);h.style.marginTop="28px";w.appendChild(h);w.appendChild(el("p",{},x[1]))});
+ var h=el("h3",{},"Other options");h.style.marginTop="28px";w.appendChild(h);w.appendChild(el("p",{},GUIDE.end));
+ var n=el("p",{"class":"muted"},GUIDE.note);n.style.fontSize=".92rem";w.appendChild(n);
+ var b=el("button",{"class":"btn",type:"button"},"Ask us about bidet seats");b.onclick=function(){sel.value="Electronic bidet seat";location.hash="contact"};w.appendChild(b);
+ return r[0]}
 window.addEventListener("hashchange",route);route();
 </script>
 </body>
