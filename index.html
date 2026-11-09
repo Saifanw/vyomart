@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vyomart – Discover Smarter Living</title>
+<meta name="description" content="Vyomart finds innovative, problem-solving products from around the world and checks them for Indian homes before we recommend them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Hind:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f6f8;--surface:#fff;--ink:#10222b;--muted:#4d6470;--line:#d3dee3;--sky:#0b6f79;--sky-soft:#dcf0f1;--sun:#f2a33a;--on-sky:#fff;
+--display:"Bricolage Grotesque","Hind",system-ui,sans-serif;--body:"Hind",system-ui,-apple-system,"Segoe UI",sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1a20;--surface:#14262e;--ink:#e8f1f4;--muted:#9bb2bc;--line:#26404a;--sky:#4fc3cc;--sky-soft:#12363c;--sun:#f5b45a;--on-sky:#0d1a20}}
+:root[data-theme="dark"]{--bg:#0d1a20;--surface:#14262e;--ink:#e8f1f4;--muted:#9bb2bc;--line:#26404a;--sky:#4fc3cc;--sky-soft:#12363c;--sun:#f5b45a;--on-sky:#0d1a20}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--body)}
+h1,h2,h3{font-family:var(--display);line-height:1.12;margin:0 0 .5em;letter-spacing:-.01em}
+h1{font-size:clamp(2.3rem,7vw,4.2rem);font-weight:800}
+h2{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:700}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0 0 1em;max-width:62ch}
+a{color:var(--sky)}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+section{padding:64px 0}
+.muted{color:var(--muted)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+.bar{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.logo{font:800 1.4rem var(--display);text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:8px}
+.logo i{width:22px;height:22px;border-radius:50%;background:var(--sun);box-shadow:inset -6px -4px 0 var(--sky)}
+nav{display:flex;gap:18px;overflow-x:auto}
+nav a{color:var(--muted);text-decoration:none;font-weight:500;white-space:nowrap}
+nav a:hover{color:var(--ink)}
+.btn{display:inline-block;background:var(--sky);color:var(--on-sky);border:0;border-radius:10px;padding:12px 20px;font:600 1rem var(--body);cursor:pointer;text-decoration:none}
+.btn.alt{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.hero{padding:56px 0 40px}
+.hero p.lead{font-size:1.2rem;color:var(--muted)}
+.picker{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px}
+.picker h2{font-size:1.1rem;margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:8px 16px;font:500 .95rem var(--body);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:var(--on-sky)}
+.answer{margin-top:18px;padding:18px;border-radius:12px;background:var(--sky-soft);min-height:96px}
+.answer b{font-family:var(--display)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin-top:24px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:6px}
+.card p{margin:0;color:var(--muted);font-size:.97rem}
+.tag{align-self:flex-start;font-size:.8rem;font-weight:600;padding:2px 10px;border-radius:999px;background:var(--sky-soft);color:var(--sky)}
+.tag.wait{background:transparent;border:1px dashed var(--muted);color:var(--muted)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.score{margin-top:24px;display:grid;gap:12px;max-width:640px}
+.row{display:grid;grid-template-columns:170px 1fr 36px;gap:12px;align-items:center;font-size:.95rem}
+.track{height:10px;border-radius:99px;background:var(--line);overflow:hidden}
+.fill{height:100%;background:var(--sky);border-radius:99px}
+.rules{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:10px;max-width:640px}
+.rules li{padding-left:28px;position:relative}
+.rules li::before{content:"✓";position:absolute;left:0;color:var(--sky);font-weight:700}
+.alt-bg{background:var(--surface);border-block:1px solid var(--line)}
+form{display:grid;gap:12px;max-width:520px;margin-top:20px}
+label{font-weight:600;font-size:.95rem}
+input,select,textarea{width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+.out{margin-top:14px;padding:14px;border-radius:10px;background:var(--sky-soft);display:none;white-space:pre-wrap;max-width:520px}
+footer{padding:36px 0 48px;border-top:1px solid var(--line);color:var(--muted);font-size:.93rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
+@media (max-width:560px){.row{grid-template-columns:120px 1fr 30px;font-size:.88rem}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+<a class="logo" href="#top" aria-label="Vyomart home"><i></i>Vyomart</a>
+<nav aria-label="Main"><a href="#products">Products</a><a href="#method">How we choose</a><a href="#guides">Guides</a><a href="#contact">Contact</a></nav>
+</div></header>
+
+<main id="top">
+<section class="hero"><div class="wrap">
+<h1>Discover smarter living.</h1>
+<p class="lead">We look for useful products from Japan, China, Korea and Vietnam, then check price, rules, warranty and service for India before we recommend anything.</p>
+<div class="picker">
+<h2>What problem do you want solved at home?</h2>
+<div class="chips" role="group" aria-label="Choose a problem" id="chips"></div>
+<div class="answer" id="answer" aria-live="polite">Pick a problem and see what we are researching for it.</div>
+</div>
+</div></section>
+
+<section id="products" class="alt-bg"><div class="wrap">
+<h2>Products we are researching</h2>
+<p class="muted">No prices or reviews are shown until a product has passed our checks and is available in India.</p>
+<div class="filters" id="filters" role="group" aria-label="Filter by category"></div>
+<div class="grid" id="grid"></div>
+</div></section>
+
+<section id="method"><div class="wrap">
+<h2>How we choose a product</h2>
+<p>Every product gets a score out of 100. It is our internal screening tool, not a promise of sales. Products scoring 80 or more go to sample testing.</p>
+<div class="score" id="score"></div>
+<ul class="rules">
+<li>A real customer problem in India</li>
+<li>A fair selling price compared with Amazon and Flipkart</li>
+<li>A verified supplier and test reports</li>
+<li>Clear import and compliance status (BIS, EPR where applicable)</li>
+<li>Warranty and spare parts available in India</li>
+<li>Positive profit after all costs</li>
+</ul>
+</div></section>
+
+<section id="guides" class="alt-bg"><div class="wrap">
+<h2>Buying guides</h2>
+<p class="muted">Plain-language guides, written before we sell anything. First three in progress:</p>
+<div class="grid">
+<div class="card"><span class="tag wait">In progress</span><h3>5 things to check before buying a smart bidet seat</h3><p>Water pressure, power point, seat size, safety and service.</p></div>
+<div class="card"><span class="tag wait">In progress</span><h3>Smart lock vs traditional lock</h3><p>Battery, backup key, door type and installation.</p></div>
+<div class="card"><span class="tag wait">In progress</span><h3>How to stop water leaks at home</h3><p>Where leaks start and how sensors help.</p></div>
+</div></div></section>
+
+<section id="about"><div class="wrap">
+<h2>About Vyomart</h2>
+<p>Vyom means sky. Our job is to look widely, bring back only what is useful, and be honest about what works in Indian homes. We start with research and recommendations, and move to selling only after demand and compliance are clear.</p>
+</div></section>
+
+<section id="contact" class="alt-bg"><div class="wrap">
+<h2>Ask us about a product</h2>
+<p class="muted">Tell us what you are looking for. We will reply with what we know.</p>
+<form id="enq">
+<div><label for="n">Your name</label><input id="n" required autocomplete="name"></div>
+<div><label for="t">What do you need?</label>
+<select id="t"></select></div>
+<div><label for="m">Message</label><textarea id="m" rows="3" placeholder="Room size, budget, any question"></textarea></div>
+<button class="btn" type="submit">Send enquiry on WhatsApp</button>
+</form>
+<div class="out" id="out" role="status"></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+<div><b>Vyomart</b> – Discover Smarter Living.<br>India · tamindir.com</div>
+<div>Privacy · Terms · Returns (pages coming soon)</div>
+</div></footer>
+
+<script>
+// Set your WhatsApp Business number here, with country code and no + (example: 919876543210)
+var WA_NUMBER = "";
+
+var CATS = ["Smart Home","Bathroom","Kitchen","Cleaning","Personal Care","Air & Environment","Home Utility"];
+var PRODUCTS = [
+ {n:"Smart door lock",c:"Smart Home",d:"Keyless entry with fingerprint, PIN and backup key."},
+ {n:"Water leak sensor",c:"Smart Home",d:"Alerts you before a small leak becomes damage."},
+ {n:"Electronic bidet seat",c:"Bathroom",d:"Cleaner, water-saving alternative to paper."},
+ {n:"Mini dishwasher",c:"Kitchen",d:"Compact washing for small families and flats."},
+ {n:"Kitchen organizers",c:"Kitchen",d:"Space-saving storage for small kitchens."},
+ {n:"Automatic soap dispenser",c:"Cleaning",d:"Touch-free dispensing, less waste."},
+ {n:"Garment steamer",c:"Personal Care",d:"Quick wrinkle removal without an ironing board."},
+ {n:"Air quality monitor",c:"Air & Environment",d:"Shows PM2.5, CO2 and humidity in your room."},
+ {n:"Portable clothes dryer",c:"Home Utility",d:"Dry clothes in monsoon or small balconies."}
+];
+var PROBLEMS = {
+ "Water leaks":{p:"Water leak sensor",c:"Smart Home",w:"Hidden leaks under sinks and near washing machines."},
+ "Bathroom hygiene":{p:"Electronic bidet seat",c:"Bathroom",w:"Comfort, hygiene and less paper use."},
+ "Dish pile-up":{p:"Mini dishwasher",c:"Kitchen",w:"Time saved in small kitchens, if power and water points suit."},
+ "Damp clothes in monsoon":{p:"Portable clothes dryer",c:"Home Utility",w:"Drying indoors without a big appliance."},
+ "Bad air indoors":{p:"Air quality monitor",c:"Air & Environment",w:"Seeing the problem first, then deciding what to fix."},
+ "Locked out or lost keys":{p:"Smart door lock",c:"Smart Home",w:"Keyless entry. Door type and service availability matter here."}
+};
+var SCORE = [["India demand",20],["Profit potential",20],["Competition gap",15],["Compliance feasibility",15],["Supplier reliability",10],["Product quality",10],["After-sales ease",10]];
+
+function el(t,a,h){var e=document.createElement(t);for(var k in a)e.setAttribute(k,a[k]);if(h!=null)e.textContent=h;return e}
+
+// Problem picker
+var chips=document.getElementById("chips"),ans=document.getElementById("answer");
+Object.keys(PROBLEMS).forEach(function(k){
+ var b=el("button",{"class":"chip","aria-pressed":"false",type:"button"},k);
+ b.onclick=function(){
+  chips.querySelectorAll(".chip").forEach(function(x){x.setAttribute("aria-pressed","false")});
+  b.setAttribute("aria-pressed","true");
+  var d=PROBLEMS[k];ans.textContent="";
+  var s=el("b",{},d.p);ans.appendChild(s);
+  ans.appendChild(document.createTextNode(" ("+d.c+"). "+d.w+" Status: under research, not yet on sale. "));
+  var a=el("a",{href:"#contact"},"Ask us about it");ans.appendChild(a);
+ };
+ chips.appendChild(b);
+});
+
+// Catalogue
+var grid=document.getElementById("grid"),filt=document.getElementById("filters"),cur="All";
+function draw(){
+ grid.textContent="";
+ PRODUCTS.filter(function(p){return cur==="All"||p.c===cur}).forEach(function(p){
+  var c=el("div",{"class":"card"});
+  c.appendChild(el("span",{"class":"tag"},p.c));
+  c.appendChild(el("h3",{},p.n));
+  c.appendChild(el("p",{},p.d));
+  c.appendChild(el("span",{"class":"tag wait"},"Under research"));
+  grid.appendChild(c);
+ });
+}
+["All"].concat(CATS).forEach(function(k){
+ var b=el("button",{"class":"chip","aria-pressed":k==="All"?"true":"false",type:"button"},k);
+ b.onclick=function(){cur=k;filt.querySelectorAll(".chip").forEach(function(x){x.setAttribute("aria-pressed","false")});b.setAttribute("aria-pressed","true");draw()};
+ filt.appendChild(b);
+});
+draw();
+
+// Scoring bars
+var sc=document.getElementById("score");
+SCORE.forEach(function(s){
+ var r=el("div",{"class":"row"});
+ r.appendChild(el("span",{},s[0]));
+ var t=el("div",{"class":"track"});var f=el("div",{"class":"fill"});f.style.width=(s[1]*5)+"%";t.appendChild(f);r.appendChild(t);
+ r.appendChild(el("span",{},String(s[1])));
+ sc.appendChild(r);
+});
+
+// Enquiry
+var sel=document.getElementById("t");
+PRODUCTS.map(function(p){return p.n}).concat(["Something else"]).forEach(function(n){sel.appendChild(el("option",{value:n},n))});
+document.getElementById("enq").onsubmit=function(e){
+ e.preventDefault();
+ var msg="Hi Vyomart, I am "+document.getElementById("n").value+". I am interested in: "+sel.value+". "+document.getElementById("m").value;
+ var out=document.getElementById("out");out.style.display="block";
+ if(WA_NUMBER){window.open("https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(msg),"_blank","noopener");out.textContent="Opening WhatsApp with your message.";}
+ else{out.textContent="WhatsApp number is not set up yet. Your message:\n\n"+msg;}
+};
+</script>
+</body>
+</html>
