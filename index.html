@@ -68,15 +68,29 @@ footer{padding:36px 0 48px;border-top:1px solid var(--line);color:var(--muted);f
 footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
 @media (max-width:560px){.row{grid-template-columns:120px 1fr 30px;font-size:.88rem}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+[hidden]{display:none!important}
+.photo{aspect-ratio:4/3;border-radius:12px;background:var(--sky-soft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:2.6rem;margin-bottom:6px;overflow:hidden}
+.photo small{font:500 .8rem var(--body);color:var(--muted)}
+.photo img{width:100%;height:100%;object-fit:cover}
+.card h3 a{color:var(--ink);text-decoration:none}.card h3 a:hover{text-decoration:underline}
+.pd{display:grid;grid-template-columns:1fr;gap:28px;margin-top:20px}
+@media(min-width:760px){.pd{grid-template-columns:1fr 1fr}}
+.t1{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800;margin:10px 0}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;margin:16px 0}.kv dt{font-weight:600}.kv dd{margin:0;color:var(--muted)}
+.tw{overflow-x:auto;margin-top:20px}
+table{border-collapse:collapse;width:100%;min-width:520px;background:var(--surface)}
+th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top;font-size:.95rem}
+th{font-weight:600;width:130px;background:var(--bg)}
+.btn+.btn{margin-left:8px}
 </style>
 </head>
 <body>
 <header><div class="wrap bar">
 <a class="logo" href="#top" aria-label="Vyomart home"><i></i>Vyomart</a>
-<nav aria-label="Main"><a href="#products">Products</a><a href="#method">How we choose</a><a href="#guides">Guides</a><a href="#contact">Contact</a></nav>
+<nav aria-label="Main"><a href="#products">Products</a><a href="#method">How we choose</a><a href="#guides">Guides</a><a href="#compare">Compare</a><a href="#contact">Contact</a></nav>
 </div></header>
 
-<main id="top">
+<main id="top"><div id="v-home">
 <section class="hero"><div class="wrap">
 <h1>Discover smarter living.</h1>
 <p class="lead">We look for useful products from Japan, China, Korea and Vietnam, then check price, rules, warranty and service for India before we recommend anything.</p>
@@ -87,6 +101,13 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
 </div>
 </div></section>
 
+<section><div class="wrap"><h2>Why trust Vyomart</h2>
+<div class="grid">
+<div class="card"><h3>No fake reviews</h3><p>We show reviews and sales only when they are real.</p></div>
+<div class="card"><h3>Compliance first</h3><p>No product is imported before rules and certificates are checked.</p></div>
+<div class="card"><h3>Service checked for India</h3><p>Warranty and spare parts are confirmed before we recommend.</p></div>
+<div class="card"><h3>Honest costs</h3><p>Prices are set after counting import, fees, shipping and returns.</p></div>
+</div></div></section>
 <section id="products" class="alt-bg"><div class="wrap">
 <h2>Products we are researching</h2>
 <p class="muted">No prices or reviews are shown until a product has passed our checks and is available in India.</p>
@@ -134,11 +155,11 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-bet
 </form>
 <div class="out" id="out" role="status"></div>
 </div></section>
-</main>
+</div><div id="v-other" hidden></div></main>
 
 <footer><div class="wrap">
 <div><b>Vyomart</b> – Discover Smarter Living.<br>India · tamindir.com</div>
-<div>Privacy · Terms · Returns (pages coming soon)</div>
+<div><a href="#privacy">Privacy</a> · <a href="#terms">Terms</a> · <a href="#returns">Returns</a> · <a href="#compare">Compare</a></div>
 </div></footer>
 
 <script>
@@ -168,6 +189,13 @@ var PROBLEMS = {
 var SCORE = [["India demand",20],["Profit potential",20],["Competition gap",15],["Compliance feasibility",15],["Supplier reliability",10],["Product quality",10],["After-sales ease",10]];
 
 function el(t,a,h){var e=document.createElement(t);for(var k in a)e.setAttribute(k,a[k]);if(h!=null)e.textContent=h;return e}
+function SLUG(n){return n.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+// To add a real photo, add img:"assets/images/file.jpg" to a product above
+function photo(p){
+ var I={"Smart Home":"🔐","Bathroom":"🚿","Kitchen":"🍽️","Cleaning":"🧼","Personal Care":"👔","Air & Environment":"🌫️","Home Utility":"👕"};
+ var d=el("div",{"class":"photo"});
+ if(p.img){d.appendChild(el("img",{src:p.img,alt:p.n,loading:"lazy"}));return d}
+ d.appendChild(el("span",{"aria-hidden":"true"},I[p.c]||"📦"));d.appendChild(el("small",{},"Photo coming soon"));return d}
 
 // Problem picker
 var chips=document.getElementById("chips"),ans=document.getElementById("answer");
@@ -190,8 +218,9 @@ function draw(){
  grid.textContent="";
  PRODUCTS.filter(function(p){return cur==="All"||p.c===cur}).forEach(function(p){
   var c=el("div",{"class":"card"});
+  c.appendChild(photo(p));
   c.appendChild(el("span",{"class":"tag"},p.c));
-  c.appendChild(el("h3",{},p.n));
+  var h3=el("h3",{}),lk=el("a",{href:"#product-"+SLUG(p.n)},p.n);h3.appendChild(lk);c.appendChild(h3);
   c.appendChild(el("p",{},p.d));
   c.appendChild(el("span",{"class":"tag wait"},"Under research"));
   grid.appendChild(c);
@@ -224,6 +253,62 @@ document.getElementById("enq").onsubmit=function(e){
  if(WA_NUMBER){window.open("https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(msg),"_blank","noopener");out.textContent="Opening WhatsApp with your message.";}
  else{out.textContent="WhatsApp number is not set up yet. Your message:\n\n"+msg;}
 };
+// ---- Pages: product detail, compare, policies ----
+var CHECKS={
+"Smart Home":["Door or wall type and thickness suit the product","Power source, battery type and a backup option","Installation and service available in your city"],
+"Bathroom":["Power point near the toilet and a safe water connection","Water pressure and seat shape fit your toilet","Warranty and spare parts in India"],
+"Kitchen":["Space, water and power points are available","Size suits your family and utensils","Service support and spare parts"],
+"Cleaning":["Battery or power type and refill cost","Fits your existing bottles or surfaces","Warranty terms"],
+"Personal Care":["Voltage and plug match Indian supply","Safety certification (BIS where applicable)","Warranty and service in India"],
+"Air & Environment":["What it measures and how it is calibrated","Display and app features you actually need","Warranty and support"],
+"Home Utility":["Power use and running cost","Space needed and where it will be used","Safety certification and warranty"]};
+var POLICY={
+ privacy:{t:"Privacy Policy",p:["This site does not store your enquiry. When you press send, your message opens in WhatsApp and reaches us only if you send it from there.","We use your name and message only to reply to you. We do not sell or share personal data.","If we add analytics or accounts later, this page will be updated first."]},
+ terms:{t:"Terms of Use",p:["Vyomart currently provides product information and research. Products shown are not yet on sale.","Product details may change as we verify them. Prices appear only after verification.","Photos and text on this site belong to Vyomart unless stated otherwise."]},
+ returns:{t:"Returns and Refunds",p:["We do not sell products on this website yet, so there is nothing to return.","Before our first sale we will publish a clear return, refund and warranty policy that follows Indian consumer rules and the policy of any marketplace we sell on."]}};
+var home=document.getElementById("v-home"),other=document.getElementById("v-other");
+function shell(){var s=el("section",{}),w=el("div",{"class":"wrap"});s.appendChild(w);return[s,w]}
+function pView(p){
+ var r=shell(),w=r[1];w.appendChild(el("a",{href:"#products"},"← All products"));
+ var g=el("div",{"class":"pd"});g.appendChild(photo(p));
+ var d=el("div");d.appendChild(el("span",{"class":"tag"},p.c));d.appendChild(el("h1",{"class":"t1"},p.n));d.appendChild(el("p",{},p.d));
+ var kv=el("dl",{"class":"kv"});
+ [["Status","Under research"],["Price in India","Not confirmed yet"],["Demand evidence","Pending"],["Competitor prices","Pending"],["Verified supplier","Pending"],["Compliance (BIS, EPR etc.)","To be checked"],["Warranty and service","To be checked"]].forEach(function(x){kv.appendChild(el("dt",{},x[0]));kv.appendChild(el("dd",{},x[1]))});
+ d.appendChild(kv);
+ d.appendChild(el("h3",{},"What to check before buying"));
+ var ul=el("ul",{"class":"rules"});(CHECKS[p.c]||[]).forEach(function(c){ul.appendChild(el("li",{},c))});d.appendChild(ul);
+ var b=el("button",{"class":"btn",type:"button",style:"margin-top:22px"},"Ask us about this");
+ b.onclick=function(){sel.value=p.n;location.hash="contact"};d.appendChild(b);
+ d.appendChild(el("a",{"class":"btn alt",href:"#compare"},"Compare"));
+ g.appendChild(d);w.appendChild(g);return r[0]}
+function cView(){
+ var r=shell(),w=r[1];w.appendChild(el("h1",{"class":"t1"},"Compare products"));
+ w.appendChild(el("p",{"class":"muted"},"Pick up to three. Prices appear only after verification."));
+ var box=el("div",{"class":"filters"}),sels=[],tw=el("div",{"class":"tw"});
+ for(var i=0;i<3;i++){var q=el("select",{"aria-label":"Product "+(i+1)});q.style.maxWidth="240px";q.appendChild(el("option",{value:""},i?"None":"Choose product"));PRODUCTS.forEach(function(p){q.appendChild(el("option",{value:p.n},p.n))});q.onchange=show;sels.push(q);box.appendChild(q)}
+ w.appendChild(box);w.appendChild(tw);
+ function show(){
+  tw.textContent="";
+  var ch=sels.map(function(s){return PRODUCTS.filter(function(p){return p.n===s.value})[0]}).filter(Boolean);
+  if(ch.length<2){tw.appendChild(el("p",{"class":"muted"},"Choose at least two products to compare."));return}
+  var t=el("table"),h=el("tr");h.appendChild(el("th",{},""));ch.forEach(function(p){h.appendChild(el("th",{},p.n))});t.appendChild(h);
+  [["Category",function(p){return p.c}],["What it does",function(p){return p.d}],["Check first",function(p){return CHECKS[p.c][0]}],["Also check",function(p){return CHECKS[p.c][1]}],["Status",function(){return"Under research"}],["Price",function(){return"Not confirmed yet"}]].forEach(function(row){
+   var tr=el("tr");tr.appendChild(el("th",{},row[0]));ch.forEach(function(p){tr.appendChild(el("td",{},row[1](p)))});t.appendChild(tr)});
+  tw.appendChild(t)}
+ show();return r[0]}
+function polView(k){
+ var r=shell(),w=r[1],P=POLICY[k];w.appendChild(el("a",{href:"#top"},"← Home"));
+ w.appendChild(el("h1",{"class":"t1"},P.t));w.appendChild(el("span",{"class":"tag wait"},"Draft, to be reviewed before launch"));
+ P.p.forEach(function(x){var e=el("p",{},x);e.style.marginTop="14px";w.appendChild(e)});return r[0]}
+function route(){
+ var h=decodeURIComponent(location.hash.slice(1)),v=null,t="Vyomart – Discover Smarter Living";
+ if(h.indexOf("product-")===0){var p=PRODUCTS.filter(function(x){return "product-"+SLUG(x.n)===h})[0];if(p){v=pView(p);t=p.n+" – Vyomart"}}
+ else if(h==="compare"){v=cView();t="Compare – Vyomart"}
+ else if(POLICY[h]){v=polView(h);t=POLICY[h].t+" – Vyomart"}
+ document.title=t;
+ if(v){home.hidden=true;other.hidden=false;other.textContent="";other.appendChild(v);window.scrollTo(0,0)}
+ else{other.hidden=true;home.hidden=false;var e=h&&document.getElementById(h);if(e)e.scrollIntoView()}}
+window.addEventListener("hashchange",route);route();
 </script>
 </body>
 </html>
