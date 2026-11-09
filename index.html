@@ -164,7 +164,7 @@ th{font-weight:600;width:130px;background:var(--bg)}
 
 <script>
 // Set your WhatsApp Business number here, with country code and no + (example: 919876543210)
-var WA_NUMBER = "";
+var WA_NUMBER = "916350566010";
 
 var CATS = ["Smart Home","Bathroom","Kitchen","Cleaning","Personal Care","Air & Environment","Home Utility"];
 var PRODUCTS = [
@@ -304,10 +304,54 @@ function route(){
  var h=decodeURIComponent(location.hash.slice(1)),v=null,t="Vyomart – Discover Smarter Living";
  if(h.indexOf("product-")===0){var p=PRODUCTS.filter(function(x){return "product-"+SLUG(x.n)===h})[0];if(p){v=pView(p);t=p.n+" – Vyomart"}}
  else if(h==="compare"){v=cView();t="Compare – Vyomart"}
+ else if(h==="calculator"){v=calcView();t="Calculator - Vyomart"}
  else if(POLICY[h]){v=polView(h);t=POLICY[h].t+" – Vyomart"}
  document.title=t;
  if(v){home.hidden=true;other.hidden=false;other.textContent="";other.appendChild(v);window.scrollTo(0,0)}
  else{other.hidden=true;home.hidden=false;var e=h&&document.getElementById(h);if(e)e.scrollIntoView()}}
+function num(i){return parseFloat(i.value)||0}
+function inr(n){return "₹"+n.toLocaleString("en-IN",{maximumFractionDigits:2})}
+function calcView(){
+ var r=shell(),w=r[1],F={};
+ w.appendChild(el("h1",{"class":"t1"},"Cost and profit calculator"));
+ w.appendChild(el("p",{"class":"muted"},"Everything is per unit, in ₹. Enter your own quotes and rates, and the selling price without GST. Confirm the duty rate and HS code with your CA or customs broker."));
+ function card(title){var c=el("div",{"class":"card"});c.appendChild(el("h3",{},title));return c}
+ function field(c,k,lab,max){var d=el("div");d.style.marginTop="8px";d.appendChild(el("label",{"for":"c-"+k},lab));
+  var i=el("input",{id:"c-"+k,type:"number",min:"0",step:"any",inputmode:"decimal",placeholder:"0"});if(max)i.setAttribute("max",max);i.oninput=calc;d.appendChild(i);c.appendChild(d);F[k]=i}
+ var g=el("div",{"class":"grid"});
+ var a=card("Landed cost");
+ [["fp","Factory price"],["fr","Freight and insurance"],["du","Customs duty % (on factory + freight)"],["ig","IGST % (on value + duty)"],["cl","Port and clearance"],["lt","Local transport"],["pk","Packaging"],["co","Compliance cost per unit"]].forEach(function(x){field(a,x[0],x[1])});
+ var rl=el("label",{style:"display:flex;gap:8px;margin-top:12px;font-weight:500"});var rec=el("input",{type:"checkbox",style:"width:auto"});rec.onchange=calc;rl.appendChild(rec);rl.appendChild(document.createTextNode("IGST is recoverable (GST registered)"));a.appendChild(rl);
+ var b=card("Selling and running costs");
+ [["sp","Selling price (without GST)"],["mf","Marketplace fee %"],["pf","Payment fee %"],["sh","Shipping per order"],["mk","Marketing per unit"],["rt","Returns and warranty % of price"]].forEach(function(x){field(b,x[0],x[1])});
+ var o=card("Result per unit");o.setAttribute("aria-live","polite");
+ g.appendChild(a);g.appendChild(b);g.appendChild(o);w.appendChild(g);
+ function calc(){
+  var cif=num(F.fp)+num(F.fr),duty=cif*num(F.du)/100,igst=(cif+duty)*num(F.ig)/100,ic=rec.checked?0:igst;
+  var landed=cif+duty+ic+num(F.cl)+num(F.lt)+num(F.pk)+num(F.co);
+  var sp=num(F.sp),pc=(num(F.mf)+num(F.pf)+num(F.rt))/100,fixed=num(F.sh)+num(F.mk);
+  var net=sp-landed-sp*pc-fixed,be=pc<1?(landed+fixed)/(1-pc):0;
+  while(o.children.length>1)o.removeChild(o.lastChild);
+  var kv=el("dl",{"class":"kv"});
+  [["Customs duty",inr(duty)],["IGST",inr(igst)+(rec.checked?" (recoverable, not counted)":" (counted as cost)")],["Landed cost",inr(landed)],["Selling costs",inr(sp*pc+fixed)],["Net contribution",inr(net)],["Margin on price",sp>0?(net/sp*100).toFixed(1)+"%":"-"],["Break-even price",inr(be)]].forEach(function(x){kv.appendChild(el("dt",{},x[0]));kv.appendChild(el("dd",{},x[1]))});
+  o.appendChild(kv);
+  o.appendChild(el("p",{style:"font-weight:600;color:var(--ink)"},sp<=0?"Enter a selling price to see the result.":net>0?"Positive contribution per unit.":"Loses money per unit. Do not proceed at this price."));
+ }
+ // Product score
+ w.appendChild(el("h2",{style:"margin-top:48px"},"Product score"));
+ w.appendChild(el("p",{"class":"muted"},"Rate each point up to its maximum. This is internal screening, not a sales guarantee."));
+ var sg=el("div",{"class":"grid"}),sc=card("Scores"),res=card("Total"),S={};res.setAttribute("aria-live","polite");
+ SCORE.forEach(function(s,n){var d=el("div");d.style.marginTop="8px";d.appendChild(el("label",{"for":"s-"+n},s[0]+" (max "+s[1]+")"));
+  var i=el("input",{id:"s-"+n,type:"number",min:"0",max:String(s[1]),inputmode:"decimal",placeholder:"0"});i.oninput=tot;d.appendChild(i);sc.appendChild(d);S[n]=i});
+ sg.appendChild(sc);sg.appendChild(res);w.appendChild(sg);
+ function tot(){
+  var t=0;SCORE.forEach(function(s,n){t+=Math.min(s[1],Math.max(0,num(S[n])))});
+  while(res.children.length>1)res.removeChild(res.lastChild);
+  var band=t>=80?"Priority for sample testing":t>=65?"Needs further research":t>=50?"Watchlist":"Reject or hold";
+  res.appendChild(el("p",{style:"font:800 2rem var(--display);color:var(--ink)"},t+" / 100"));
+  res.appendChild(el("p",{},band));
+ }
+ calc();tot();return r[0]}
 window.addEventListener("hashchange",route);route();
 </script>
 </body>
